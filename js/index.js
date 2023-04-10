@@ -568,10 +568,12 @@ async function downloadAndFlash(fileURL) {
 
 // Based on the configured App store links, show the respective download links.
 function buildAppLinks(){
-    let defaultAppURLsHTML = "You can download phone app from the app store and interact with your device. Scan the QRCode to access the respective apps.<br>";
+    let hrElement = document.getElementById("preview_body").querySelector("hr")
+    hrElement.style.display =- "block"
+    let defaultAppURLsHTML = "Note: You can download phone app from the app store and interact with your device. Scan the QRCode to access the respective apps.<br>";
     let appURLsHTML = "";
 
-    if(android_app_url !== ""){
+    if(android_app_url){
         new QRCode(document.getElementById("qrcodeAndroidApp"), {
             text: android_app_url,
             width: 128,
@@ -620,8 +622,13 @@ function buildAppLinks(){
         $("#iosAppLogoQS").html("<a href='" + ios_app_url + "' target='_blank'><img src='./assets/appstore_download.png' height='50' width='130'></a>");
         appURLsHTML = defaultAppURLsHTML;
     }
-    $("#progressMsgQS").html("Firmware Image flashing is complete. " + appURLsHTML);
-    $("#appDownloadLink").html(appURLsHTML);
+    if(appURLsHTML === defaultAppURLsHTML){
+        $("#progressMsgQS").html("Firmware Image flashing is complete. " + appURLsHTML);
+        $("#appDownloadLink").html(appURLsHTML);
+    }else{
+        $("#progressMsgQS").html("Firmware Image flashing is complete. ");
+        hrElement.style.display = "none"
+    }
 }
 
 function cleanUpOldFlashHistory() {
@@ -637,19 +644,29 @@ function cleanUpOldFlashHistory() {
 }
 
 flashButton.onclick = async () => {
-    let flashFile = $("input[type='radio'][name='chipType']:checked").val();
-    var file_server_url = config.firmware_images_url;
-
-    progressMsgQS.style.display = "inline";
-
-    cleanUpOldFlashHistory();
-    postFlashClick()
-    await downloadAndFlash(file_server_url + flashFile);
-
-    buildAppLinks();
-    $("#statusModal").click();
-    esploader.status = "started";
-    postFlashDone()
+    if(chipSetsRadioGroup.querySelectorAll("input[type=radio]:checked").length!== 0){
+        let flashFile = $("input[type='radio'][name='chipType']:checked").val();
+        var file_server_url = config.firmware_images_url;
+    
+        progressMsgQS.style.display = "inline";
+    
+        cleanUpOldFlashHistory();
+        postFlashClick()
+        await downloadAndFlash(file_server_url + flashFile);
+    
+        buildAppLinks();
+        $("#statusModal").click();
+        esploader.status = "started";
+        postFlashDone()
+    }else{
+        let previousState = lblConnTo.innerHTML
+        let alertChipsetSelectMsg = `<b><span style="color:red">Unable to flash device. Please ensure that chipset type is selected before flashing.</span></b>`
+        lblConnTo.innerHTML = alertChipsetSelectMsg
+        window.scrollTo(0,0)
+        setTimeout(() => {
+            lblConnTo.innerHTML = previousState
+        }, 3000);
+    }
 }
 let postFlashClick = () => {
     flashButton.disabled = true;
