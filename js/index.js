@@ -120,6 +120,8 @@ function buildQuickTryUI_v1_0() {
         // ClearPreviousRowsOfDIY()
         build_DIY_UI(deviceTypeSelect.value);
         DIYButton.click();
+
+
     }
     setAppURLs(config[supported_apps[0]]);
 }
