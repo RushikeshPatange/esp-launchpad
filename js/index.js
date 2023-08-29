@@ -551,6 +551,35 @@ function buildAppLinks(){
         $("#iosAppLogoQS").html("<a href='" + ios_app_url + "' target='_blank'><img src='./assets/appstore_download.png' height='50' width='130'></a>");
         appURLsHTML = defaultAppURLsHTML;
     }
+
+    if (config["setup_payload"] && config["setup_payload_logo"]) {
+        new QRCode(document.getElementById("setupPayloadQRCode"), {
+            text: config["setup_payload"],
+            width: 128,
+            height: 128,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+	        correctLevel : QRCode.CorrectLevel.H
+            });
+
+        $("#setupPayloadLogo").html(`<img src=${config["setup_payload_logo"]} height='50' width='130'></a>`);
+
+        new QRCode(document.getElementById("setupPayloadQRCodeQS"), {
+            text: config["setup_payload"],
+            width: 128,
+            height: 128,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+	        correctLevel : QRCode.CorrectLevel.H
+            });
+
+        $("#setupPayloadLogoQS").html(`<img src=${config["setup_payload_logo"]} height='50' width='130'></a>`);
+
+    } else {
+        $("#setupPayloadRow").css("display", "none");
+        $("#setupPayloadRowQS").css("display", "none");
+    }
+
     if(appURLsHTML === defaultAppURLsHTML){
         $("#progressMsgQS").html("Firmware Image flashing is complete. " + appURLsHTML);
         $("#appDownloadLink").html(appURLsHTML);
