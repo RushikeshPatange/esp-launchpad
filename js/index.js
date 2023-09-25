@@ -30,6 +30,8 @@ let resizeTimeout = false;
 
 import * as utilities from "./utils.js";
 import * as esptooljs from "../node_modules/esptool-js/bundle.js";
+import * as smolToml from '../node_modules/smol-toml/dist/index.js';
+
 const ESPLoader = esptooljs.ESPLoader;
 const Transport = esptooljs.Transport;
 
@@ -91,7 +93,8 @@ async function buildQuickTryUI() {
     xhr.send();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            config = toml.parse(xhr.responseText);
+            config = smolToml.parse(xhr.responseText);
+            console.log(config);
             var requestedApp = urlParams.get("app");
             if (requestedApp) {
                 // Filter the supported_apps that start with the app name
