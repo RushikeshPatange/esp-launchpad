@@ -12,6 +12,7 @@ image.esp32-s2 = "esp32s2_rainmaker_fan_merged.bin"
 image.esp32-c3 = "esp32c3_rainmaker_fan_merged.bin"
 android_app_url = "https://play.google.com/store/apps/details?id=com.espressif.rainmaker"
 ios_app_url = "https://apps.apple.com/app/esp-rainmaker/id1497491540"
+name = "My name is Rushi"
 
 [RainMaker-GPIO]
 chipsets = ["ESP32", "ESP32-S2", "ESP32-C3"]
