@@ -30,6 +30,8 @@ let resizeTimeout = false;
 
 import * as utilities from "./utils.js";
 import * as esptooljs from "../node_modules/esptool-js/bundle.js";
+import * as toml from '../node_modules/smol-toml/dist/index.js';
+
 const ESPLoader = esptooljs.ESPLoader;
 const Transport = esptooljs.Transport;
 
@@ -178,7 +180,7 @@ function populateSupportedChipsets(deviceConfig) {
         inputElement.setAttribute("class", "form-check-input");
         inputElement.name = "chipType";
         inputElement.id = "radio-" + chipset;
-        inputElement.value = deviceConfig["image." + chipset.toLowerCase()];
+        inputElement.value = deviceConfig["image"][chipset.toLowerCase()];
         if (chipset.toLowerCase() === chip.toLowerCase())
             inputElement.checked = true;
 
