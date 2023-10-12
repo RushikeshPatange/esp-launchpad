@@ -69,6 +69,7 @@ async function downloadAndFlash() {
             eraseAll: false,
             compress: true,
         };
+        await esploader.erase_flash();
         await esploader.write_flash(flashOptions);
     } catch (error) {
     }
