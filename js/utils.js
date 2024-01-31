@@ -10,6 +10,8 @@ export const usbPortFilters = [
     { usbVendorId: 0x0403, usbProductId: 0x6001 }, /* FT232R */
 ];
 
+export const consoleBaudrateC2 = 74880; // supported console baudrate for C2
+
 export function getTerminalColumns(mainContainer = null) {
     const mainContainerWidth = mainContainer?.offsetWidth || 1320;
     return Math.round(mainContainerWidth / 8.25);

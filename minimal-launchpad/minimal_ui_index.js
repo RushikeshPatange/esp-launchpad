@@ -92,7 +92,7 @@ async function downloadAndFlash() {
             eraseAll: true, // Always erasing before flash
             compress: true,
         };
-        await esploader.write_flash(flashOptions);
+        await esploader.writeFlash(flashOptions);
     } catch (error) {
         errorTroubleshootModalToggleButton.click();
         waitButton.style.display = "none";
@@ -232,14 +232,14 @@ async function connectToDevice() {
         esploader = new ESPLoader(loaderOptions);
         connected = true;
 
-        chipDesc = await esploader.main_fn();
+        chipDesc = await esploader.main();
         clearTimeout(deviceConnectionTimeout);
         if (errorTroubleshootModal.classList.contains("show")) {
             errorTroubleshootModalToggleButton.click();
         }
         chip = esploader.chip.CHIP_NAME;
 
-        await esploader.flash_id();
+        await esploader.flashId();
     } catch (error) {
         clearTimeout(deviceConnectionTimeout);
         if (!errorTroubleshootModal.classList.contains("show")) {
@@ -300,7 +300,11 @@ consoleStartButton.onclick = async () => {
     if (config.portConnectionOptions?.length) {
         await transport.connect(parseInt(config.portConnectionOptions[0]?.baudRate), serialOptions);
     } else {
-        await transport.connect();
+        if (esploader.chip.CHIP_NAME === "ESP32-C2") {
+            await transport.connect(utilities.consoleBaudrateC2);
+        } else {
+            await transport.connect();
+        }
     }
     await transport.setDTR(false);
     await new Promise(resolve => setTimeout(resolve, 100));

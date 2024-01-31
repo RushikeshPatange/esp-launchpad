@@ -263,10 +263,10 @@ async function connectToDevice() {
         };
         esploader = new ESPLoader(loaderOptions);
         connected = true;
-        chipDesc = await esploader.main_fn();
+        chipDesc = await esploader.main();
         chip = esploader.chip.CHIP_NAME;
 
-        await esploader.flash_id();
+        await esploader.flashId();
     } catch(e) {
     }
 
@@ -319,7 +319,13 @@ resetButton.onclick = async () => {
             await device.close();
         }
     }
-    await transport.connect();
+
+    if (esploader.chip.CHIP_NAME === "ESP32-C2") {
+        await transport.connect(utilities.consoleBaudrateC2);
+    } else {
+        await transport.connect();
+    }
+
     await transport.setDTR(false);
     await new Promise(resolve => setTimeout(resolve, 100));
     await transport.setDTR(true);
@@ -350,7 +356,7 @@ eraseButton.onclick = async () => {
     terminalContainer.classList.remove("fade-in-down");
     eraseButton.disabled = true;
     $('#v-pills-console-tab').click();
-    await esploader.erase_flash();
+    await esploader.eraseFlash();
     postFlashDone();
     eraseButton.disabled = false;
 }
@@ -511,7 +517,7 @@ programButton.onclick = async () => {
             eraseAll: false,
             compress: true,
         };
-        await esploader.write_flash(flashOptions);
+        await esploader.writeFlash(flashOptions);
         postFlashDone();
         terminalContainer.classList.remove("fade-in-down");
     } catch (e) {
@@ -531,7 +537,7 @@ async function downloadAndFlash(fileURL) {
                 eraseAll: false,
                 compress: true,
             };
-            await esploader.write_flash(flashOptions);
+            await esploader.writeFlash(flashOptions);
         }
     } catch (e) {
     }
